@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Detection</title>
+</head>
+<body>
+
+<h1>Eye Detection Example</h1>
+
+<!-- Video feed container -->
+<div id="video-container">
+    <video id="input-video" width="640" height="480" autoplay></video>
+</div>
+
+<!-- Output container for eye movement indication -->
+<div id="output-container">
+    <p id="eye-indicator">Eye Movement: <span id="eye-movement">Not Detected</span></p>
+</div>
+
+<!-- Script for loading and using mediapipeFacemesh -->
+<script type="text/javascript" src="path/to/mediapipeFacemesh.js"></script>
+<script type="text/javascript">
+
+    // Function to run eye detection
+    async function runEyeDetection() {
+        // Initialize mediapipeFacemesh (replace with actual initialization code)
+        const facemesh = new mediapipeFacemesh.FaceMesh();
+
+        // Get video input element
+        const videoElement = document.getElementById('input-video');
+
+        // Access user's camera
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+        videoElement.srcObject = stream;
+
+        // Wait for metadata to load, then play the video
+        videoElement.onloadedmetadata = () => {
+            videoElement.play();
+        };
+
+        // Function to detect eyes and update UI
+        function detectEyes() {
+            // Perform eye detection using facemesh (replace with actual detection code)
+            const eyeMovement = facemesh.detectEyeMovement(videoElement);
+
+            // Update UI with eye movement information
+            const eyeMovementSpan = document.getElementById('eye-movement');
+            eyeMovementSpan.textContent = eyeMovement;
+
+            // Schedule the next detection
+            requestAnimationFrame(detectEyes);
+        }
+
+        // Start detecting eyes
+        detectEyes();
+    }
+
+    // Ensure that mediapipeFacemesh is defined before using it
+    if (typeof mediapipeFacemesh !== 'undefined') {
+        // Run eye detection when the script is ready
+        runEyeDetection();
+    } else {
+        console.error('Error: mediapipeFacemesh is not defined.');
+    }
+
+</script>
+
+</body>
+</html>
